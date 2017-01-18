@@ -1,0 +1,13 @@
+export(
+"bws2.questionnaire",
+"bws2.dataset",
+"bws2.count"
+)
+
+importFrom("graphics", "barplot", "par")
+
+importFrom("stats", "contr.sum", "model.matrix", "reshape")
+
+S3method(barplot, bws2.count)
+S3method(sum, bws2.count)
+
