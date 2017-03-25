@@ -6,8 +6,6 @@ function(
   ...)
 {
 
-print(score)
-
   score <- match.arg(score)
   if (score == "bw") {
     SCORE <- x[, attributes(x)$bw.names]

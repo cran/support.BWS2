@@ -1,4 +1,10 @@
 Changes to package support.BWS2
 
+2017-03-25, version 0.1-1
+-Fixed an internal function
+
+-Added a dataset
+
+
 2017-01-18, version 0.1-0
 -First release to CRAN

@@ -204,7 +204,13 @@ such as a mixed (random parameters) logit model. Refer to the task views
  about experimental designs (Groemping 2016) and econometrics (Zeileis 2017) 
 on CRAN for details on packages for experimental designs and 
 discrete choice models in R.
+
+\bold{Acknowledgments}
+
+I would like to thank Professor Kazuo Sato for his kind support. 
+This work was supported by JSPS KAKENHI Grant Number 25450341.
 }
+
 
 \author{
 Hideo Aizaki
