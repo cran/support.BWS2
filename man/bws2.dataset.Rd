@@ -212,8 +212,8 @@ all the questions.}
 \item{respondent.characteristics}{Names of variables corresponding to 
 the respondents' characteristics: variables, except for the respondents' 
 id and response variables, are considered the respondents' characteristics.}
-Note that the attributes \code{delete.best} and \code{freq.levels} are valid 
-for the marginal (sequential) model.
+Note that the attribute \code{delete.best} is valid for the marginal 
+(sequential) model.
 }
 
 

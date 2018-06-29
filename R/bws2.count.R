@@ -3,14 +3,12 @@ function (
   data,
   ...) 
 {
-if (attributes(data)$type != "marginal") {
-  stop("data must be generated using bws2.dataset() with argument type set as marginal")
-}
-
-  attr.lev <- attributes(data)$attribute.levels
+  attr.lev      <- attributes(data)$attribute.levels
   variableNames <- unlist(attr.lev)
-  freq.lev <- attributes(data)$freq.levels
-  id.variable <- attributes(data)$id
+  freq.lev      <- attributes(data)$freq.levels
+  id.variable   <- attributes(data)$id
+
+if (attributes(data)$type == "marginal")  {
 
 # delete lev.var.wo.ref variables from data
   dataset <- data[, !colnames(data) %in% attributes(data)$lev.var.wo.ref]
@@ -34,6 +32,36 @@ if (attributes(data)$type != "marginal") {
   W <- subset(dataset,
               dataset$BW == -1 & dataset$RES == 1,
               select = c(id.variable, "Q", "BW", variableNames))
+
+} else {
+
+  dataset <- subset(data, data$RES == 1)
+  dataset.bw <- subset(dataset, 
+                       select = c(id.variable, "Q", "BEST.LV", "WORST.LV"))
+  dsgn.best  <- matrix(dataset.bw$BEST.LV,
+                       nrow = length(dataset.bw$BEST.LV),
+                       ncol = length(variableNames))
+  dsgn.worst <- matrix(dataset.bw$WORST.LV,
+                       nrow = length(dataset.bw$WORST.LV),
+                       ncol = length(variableNames))
+  dsgn.ch <- matrix(variableNames,
+                    nrow = nrow(dsgn.best),
+                    ncol = ncol(dsgn.best),
+                    byrow = TRUE)
+
+  dsgn.mat <- dsgn.best == dsgn.ch
+  storage.mode(dsgn.mat) <- "integer"
+  colnames(dsgn.mat) <- variableNames
+  BW <- rep(1, nrow(dsgn.mat))
+  B <- cbind(dataset.bw[, c(id.variable, "Q", "BEST.LV")], BW, dsgn.mat)
+
+  dsgn.mat <- dsgn.worst == dsgn.ch
+  storage.mode(dsgn.mat) <- "integer"
+  colnames(dsgn.mat) <- variableNames
+  BW <- rep(-1, nrow(dsgn.mat))
+  W <- cbind(dataset.bw[, c(id.variable, "Q", "WORST.LV")], BW, dsgn.mat)
+
+}
 
   disaggreB <- do.call(rbind,
                        by(B[, c(id.variable, variableNames)],
@@ -66,6 +94,21 @@ if (attributes(data)$type != "marginal") {
   rtn <- merge(x = disaggreB, y = disaggreW, by = id.variable)
   rtn <- merge(x = rtn, y = diffBW, by = id.variable)
   rtn <- merge(x = rtn, y = std.diffBW, by = id.variable)
+
+  if (!isTRUE(all.equal(length(attributes(data)$respondent.characteristics), 0))) {
+    resp.cha.vars <- attributes(data)$respondent.characteristics
+    if (attributes(data)$type == "marginal")  {
+      dataset.tmp <- subset(data,
+                            data$Q == 1 & data$ALT == 1 & data$BW == 1,
+                            select = c(id.variable, resp.cha.vars))
+    } else {
+      dataset.tmp <- subset(data,
+                            data$Q == 1 & data$PAIR == 1,
+                            select = c(id.variable, resp.cha.vars))
+    }
+      rtn <- merge(x = rtn, y = dataset.tmp, by = id.variable)
+  }
+
 
   attributes(rtn)$nquestions   <- nrow(attributes(data)$choice.sets)
   attributes(rtn)$nrespondents <- length(IDvar)

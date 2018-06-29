@@ -207,6 +207,17 @@ respondent.characteristics <-
   colnames(dataset)[which(colnames(dataset) == "ID")] <- id
 
 
+# calculate frequency of each level
+
+  tmp1 <- tmp2 <- choice.sets
+  for (i in 1:ncol(tmp1)) {
+    tmp2[, i] <- attribute.levels[[i]][tmp1[, i]]
+  }
+  tbl <- table(tmp2)
+  freq.levels <- as.vector(tbl)
+  names(freq.levels) <- names(tbl)
+  freq.levels <- freq.levels[unlist(attribute.levels)]
+
 
 # set attributes
 
@@ -219,6 +230,7 @@ respondent.characteristics <-
   attributes(dataset)$type                <- c("paired")
   attributes(dataset)$design.matrix       <- design.matrix
   attributes(dataset)$lev.var.wo.ref      <- lev.var.wo.ref
+  attributes(dataset)$freq.levels         <- freq.levels
   attributes(dataset)$respondent.characteristics <- respondent.characteristics
 
 

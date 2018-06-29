@@ -208,7 +208,7 @@ discrete choice models in R.
 \bold{Acknowledgments}
 
 I would like to thank Professor Kazuo Sato for his kind support. 
-This work was supported by JSPS KAKENHI Grant Number 25450341.
+This work was supported by JSPS KAKENHI Grant Numbers 25450341 and 16K07886.
 }
 
 

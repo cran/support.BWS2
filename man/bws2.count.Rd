@@ -28,7 +28,7 @@ bws2.count(data, ...)
 \arguments{
   \item{data}{
 A data frame containing the dataset generated from 
-\code{bws2.dataset()} with argument \code{type = "marginal"}.
+\code{bws2.dataset()}.
 }
   \item{x, height}{
 An object of the S3 class \sQuote{bws2.count}.
@@ -75,9 +75,10 @@ when \code{output = "level"}.
 
 \value{
 The output from \code{bws2.count()}, which is the object of the S3 class 
-\sQuote{bws2.count}, is a data frame containing five types of variables: 
+\sQuote{bws2.count}, is a data frame containing six types of variables: 
 respondent's identification variable, B score variables, W score variables, 
-BW score variables, and standardized BW score variables. These scores are 
+BW score variables, standardized BW score variables, and respondent's 
+characteristic variables. These scores are 
 calculated by each respondent. The names of these score variables are 
 \code{b.<name of attribute or attribute level>}, 
 \code{w.<name of attribute or attribute level>}, 
