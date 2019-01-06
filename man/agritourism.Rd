@@ -1,15 +1,19 @@
 \name{agritourism}
 \alias{agritourism}
 \docType{data}
+
 \title{
 Potential tourists' valuation of agritourism
 }
+
 \description{
 This dataset contains responses to Case 2 BWS questions. Respondents were asked to evaluate agritourism packages provided by dairy farms in Hokkaido, Japan.
 }
+
 \usage{
 data(agritourism)
 }
+
 \format{
 A data frame with 240 respondents on the following 21 variables.
   \describe{
@@ -37,13 +41,19 @@ A data frame with 240 respondents on the following 21 variables.
   }
 See the section Examples for details.
 }
+
 \author{
 Hideo Aizaki
 }
+
 \seealso{
-\code{\link[support.BWS2]{support.BWS2-package}}, \code{\link[support.BWS2]{bws2.dataset}}, \code{\link[DoE.base]{oa.design}}
+\code{\link[support.BWS2]{support.BWS2-package}}, 
+\code{\link[support.BWS2]{bws2.dataset}}, 
+\code{\link[DoE.base]{oa.design}}
 }
+
 \examples{
+\dontrun{
 # Agritourism refers to various activities offered by farms and ranches
 # to visitors, such as hands-on farm work or outdoor recreation.
 #
@@ -97,10 +107,10 @@ des <- cbind(
 # The names of the attributes (activities) and attribute levels 
 # (activity items) were stored in the list attr.lev:
 attr.lev <- list(
-   chore = c("milking", "feeding", "nursing"),
-   food = c("butter", "ice", "caramel"),
-   craft = c("wool", "wood", "flower"),
-   outdoor =c("horse", "tractor", "cow"))
+  chore = c("milking", "feeding", "nursing"),
+  food = c("butter", "ice", "caramel"),
+  craft = c("wool", "wood", "flower"),
+  outdoor = c("horse", "tractor", "cow"))
 
 # A series of Case 2 BWS questions were converted from the OMED using 
 # bws2.questionnaire():
@@ -124,30 +134,29 @@ base.lev <- list(
   chore = c("nursing"),
   food = c("caramel"),
   craft = c("flower"),
-  outdoor =c("cow"))
+  outdoor = c("cow"))
 
 # The datasets for the paired model and the marginal model were created
 # using bws2.dataset() and then stored in the objects pr.data1 and mr.data1,
 # respectively:
 pr.data1 <- bws2.dataset(
-   data = agritourism,
-   id = "id",
-   response = response.vars,  
-   choice.sets = des,        
-   attribute.levels = attr.lev,
-   attribute.variables = c("reverse"),
-   effect = base.lev,
-   type = "paired") 
+  data = agritourism,
+  id = "id",
+  response = response.vars,  
+  choice.sets = des,        
+  attribute.levels = attr.lev,
+  reverse = TRUE,
+  base.level = base.lev,
+  type = "paired") 
 mr.data1 <- bws2.dataset(
-   data = agritourism,
-   id = "id",
-   response = response.vars,
-   choice.sets = des,
-   attribute.levels = attr.lev,
-   attribute.variables = c("reverse"),
-   effect = base.lev,
-   delete.best = FALSE,
-   type = "marginal")
+  data = agritourism,
+  id = "id",
+  response = response.vars,
+  choice.sets = des,
+  attribute.levels = attr.lev,
+  reverse = TRUE,
+  base.level = base.lev,
+  type = "marginal")
 dim(pr.data1)
 names(pr.data1)
 dim(mr.data1)
@@ -216,7 +225,7 @@ names(cow) <- "cow"
 craft <- 0
 names(craft) <- "craft"
 paired.model <- c(b[1:2], craft, b[3], b[4:5], nursing, b[6:7],
-   caramel, b[8:9], flower, b[10:11], cow)
+  caramel, b[8:9], flower, b[10:11], cow)
 barplot(paired.model)
 
 # The following code is for the marginal model: 
@@ -232,7 +241,7 @@ names(flower) <- "flower"
 (cow <- -sum(b[10:11]))
 names(cow) <- "cow"
 marginal.model <- c(b[1:2], craft, b[3], b[4:5], nursing, b[6:7],
-   caramel, b[8:9], flower, b[10:11], cow)
+  caramel, b[8:9], flower, b[10:11], cow)
 barplot(marginal.model)
 
 # As mentioned in Flynn et al. (2008), the results from the paired model
@@ -240,6 +249,7 @@ barplot(marginal.model)
 # for the two results is calculated as follows:
 cor(marginal.model, paired.model)
 plot(marginal.model, paired.model, 
-   xlim = c(-0.5, 1), ylim = c(-0.5, 1))
+  xlim = c(-0.5, 1), ylim = c(-0.5, 1))
+}
 }
 \keyword{datasets}

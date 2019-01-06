@@ -243,6 +243,9 @@ Groemping U (2016) \emph{CRAN Task View: Design of Experiments (DoE) &
  Analysis of Experimental Data}. 
 \url{https://CRAN.R-project.org/view=ExperimentalDesign}.
 
+Hensher DA, Rose JM, Greene WH (2015) \emph{Applied Choice Analysis}. 
+2nd edition. Cambridge University Press.
+
 Louviere JJ, Flynn TN, Marley AAJ (2015) \emph{Best-Worst Scaling: 
 Theory, Methods and Applications}. Cambridge University Press.
 

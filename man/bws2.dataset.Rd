@@ -18,8 +18,10 @@ This function creates a dataset used for \code{bws2.count()} in
 
 \usage{
 bws2.dataset(data, id, response, choice.sets, attribute.levels, 
-  attribute.variables = c("reverse", "constant"), effect = NULL, 
-  delete.best = FALSE, type = c("paired", "marginal"), ...)
+  base.attribute = NULL, base.level = NULL, 
+  type = c("paired", "marginal", "sequential"), reverse = TRUE,
+  attribute.variables = NULL, effect = NULL, delete.best = FALSE, 
+   ...)
 }
 
 
@@ -42,28 +44,48 @@ A data frame or matrix containing an orthogonal main-effect design.
   \item{attribute.levels}{
 A list containing the names of the attributes and their levels.
 }
+  \item{base.attribute}{
+A character showing the base attribute: the argument is used 
+when attribute variables are created as effect coded ones and \code{NULL} 
+is assigned to the argument when attribute variables are created as
+dummy coded ones.
+}
+  \item{base.level}{
+A list containing the base level in each attribute: the argument is used 
+when attribute level variables are created as effect coded ones and 
+\code{NULL} is assigned to the argument when attribute level 
+variables are created as dummy coded ones.
+}
+  \item{type}{
+A character showing a type of dataset created by this function: 
+\code{"paired"} for a paired model, \code{"marginal"} for a 
+marginal model, and \code{"sequential"} for a marginal sequential model.
+}
+  \item{reverse}{
+A logical value denoted by \code{TRUE} when the signs of the attribute 
+variables are reversed for the possible worst, 
+or otherwise \code{FALSE}.
+}
   \item{attribute.variables}{
 A character showing a type of attribute variables, denoted by 
 \code{"reverse"} when the attribute variables take the value of 
 \code{1} for a possible best, \code{-1} for a possible worst, and 
 \code{0} otherwise, or \code{"constant"} when the attribute variables 
-are created as attribute-specific constants.
+are created as attribute-specific constants. The argument is deprecated.
+Please use the argument \code{reverse} instead.
 }
   \item{effect}{
 A list containing the base level in each attribute: the argument is used 
 when attribute level variables are created as effect coded ones and 
 while \code{NULL} is assigned to the argument when attribute level 
-variables are created as dummy coded ones.
+variables are created as dummy coded ones. The argument is deprecated.
+Please use the argument \code{base.level} instead.
 }
   \item{delete.best}{
 A logical value denoted by \code{TRUE} when deleting an attribute level 
 selected as the best in the worst choice set (that is, using a marginal 
-sequential model) or \code{FALSE} when not doing so.
-}
-  \item{type}{
-A character showing a type of dataset created by this function: 
-\code{"paired"} for a paired model and \code{"marginal"} for a 
-marginal (sequential) model.
+sequential model) or \code{FALSE} when not doing so. 
+The argument is deprecated. Please use the argument \code{type} instead.
 }
   \item{\dots}{
 Optional arguments; currently not in use.
@@ -116,26 +138,25 @@ the same as those in \code{bws2.questionnaire()}.
 The order of questions in the respondent dataset has to be 
 the same as that in \code{choice.sets}.
 
-The arguments \code{type}, \code{attribute.variables}, \code{effect}, and 
-\code{delete.best} are set according to the model you will use: argument 
-\code{type} is set as \code{"paired"} for the paired model, or 
-\code{"marginal"} for the marginal (sequential) model; 
-the argument \code{attribute.variables} is set as \code{"reverse"} 
-for a model in which attribute variables take the value of \code{1} 
-if the associated attribute-level variables are treated as 
-the possible best, \code{-1} for the possible worst, and \code{0} 
-otherwise (Flynn et al. 2007 and 2008), while it is set as 
-\code{"constant"} for a model with attribute-specific 
-constants in which the attribute variables takes the value of \code{1} 
-if the associated attribute-levels are treated as the possible best or 
-worst, and \code{0} otherwise (Hensher et al. 2015, Appendix 6B); 
-the argument \code{effetct} is set as a list containing the base level 
-in each attribute for a model with effect-coded attribute level 
-variables (Flynn et al. 2007 and 2008), while it is set as 
-\code{NULL} for a model with dummy-coded attribute level variables 
-(Hensher et al. 2015, Appendix 6B); 
-and the argument \code{delete.best} is set as \code{TRUE} for 
-the marginal sequential model, or \code{FALSE} otherwise.
+The arguments \code{type}, \code{reverse}, \code{base.attribute}, 
+and \code{base.level} are set according to the model you will use: 
+argument \code{type} is set as \code{"paired"} for the paired model, 
+\code{"marginal"} for the marginal model, or \code{"sequential"} for 
+the marginal sequential model; 
+the argument \code{reverse} is set as \code{"TRUE"} for a model 
+in which the signs of the attribute variables are reversed 
+for the possible worst (Flynn et al. 2007 and 2008), 
+or \code{FALSE} when not doing so (Hensher et al. 2015, Appendix 6B); 
+the argument \code{base.attribute} is set as a character vector showing 
+the base attribute for a marginal (sequential) model with effect-coded 
+attribute variables;
+and the argument \code{base.level} is set as a list containing the base level 
+in each attribute for a model with effect-coded level variables 
+(Flynn et al. 2007 and 2008), while it is set as \code{NULL} for a model
+ with dummy-coded attribute level variables (Hensher et al. 2015, Appendix 6B).
+
+Note that the arguments \code{attribute.variables}, \code{effect}, 
+and \code{delete.best} are deprecated and will be removed in the future.
 }
 
 
@@ -202,7 +223,8 @@ by respondents and \code{0} otherwise.}
 
 The output has its attributes that consist of arguments assigned to 
 this function (i.e., \code{id}, \code{response}, \code{choice.sets}, 
-\code{attribute.levels}, \code{attribute.variables}, \code{effect}, 
+\code{attribute.levels}, \code{reverse}, \code{base.attribute}, 
+\code{base.level}, \code{attribute.variables}, \code{effect}, 
 \code{delete.best}, and \code{type}) and the following:
 \item{design.matrix}{Design matrix.}
 \item{lev.var.wo.ref}{Names of attribute-level variables excluding 
@@ -212,25 +234,8 @@ all the questions.}
 \item{respondent.characteristics}{Names of variables corresponding to 
 the respondents' characteristics: variables, except for the respondents' 
 id and response variables, are considered the respondents' characteristics.}
-Note that the attribute \code{delete.best} is valid for the marginal 
-(sequential) model.
 }
 
-
-\references{
-Flynn TN, Louviere JJ, Peters TJ, Coast J (2007) Best-worst scaling: 
-What it can do for health care research and how to do it. 
-\emph{Journal of Health Economics}, \bold{26}, 171--189.
-
-Flynn TN, Louviere JJ, Peters TJ, Coast J (2008) Estimating preferences 
-for a dermatology consultation using best-worst scaling: 
-Comparison of various methods of analysis. 
-\emph{BMC Medical Research Methodology}, \bold{8}(76). 
-doi: 10.1186/1471-2288-8-76.
-
-Hensher DA, Rose JM, Greene WH (2015) \emph{Applied Choice Analysis}. 
-2nd edition. Cambridge University Press.
-}
 
 
 \author{
@@ -255,17 +260,16 @@ require(survival)
 # Set a three-level orthogonal main-effect design (OMED) with
 # four columns
 omed <- matrix(
-c(
-1,3,2,3,
-3,1,2,2,
-3,3,3,1,
-2,3,1,2,
-2,2,2,1,
-1,1,1,1,
-1,2,3,2,
-3,2,1,3,
-2,1,3,3),
-nrow = 9, ncol = 4, byrow = TRUE)
+  c(1,3,2,3,
+    3,1,2,2,
+    3,3,3,1,
+    2,3,1,2,
+    2,2,2,1,
+    1,1,1,1,
+    1,2,3,2,
+    3,2,1,3,
+    2,1,3,3),
+  nrow = 9, ncol = 4, byrow = TRUE)
 omed
 ## The OMED is generated by executing the following lines of code:
 ## require(DoE.base)
@@ -291,26 +295,25 @@ bws2.questionnaire(omed, attribute.levels = attr.lev,
 # Set respondent dataset containing 20 respondents who answered 
 # nine BWS questions
 resp.data <- data.frame(
-id = c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20),
-B1 = c(2,2,2,1,2,4,2,2,2,2,1,2,2,4,2,3,2,3,2,2),
-W1 = c(1,1,1,4,1,3,3,1,4,1,4,4,1,1,1,4,1,1,4,4),
-B2 = c(1,1,2,1,1,3,1,1,1,1,2,1,1,2,1,3,1,3,1,1),
-W2 = c(2,4,4,4,4,2,4,2,4,2,4,4,4,4,2,4,4,1,4,4),
-B3 = c(1,1,2,1,2,1,1,1,1,2,1,1,1,2,1,1,1,1,3,1),
-W3 = c(4,4,4,2,4,4,4,3,4,3,4,4,3,1,4,4,3,4,4,4),
-B4 = c(1,2,2,1,2,1,2,2,2,1,2,4,2,2,2,4,2,2,1,2),
-W4 = c(3,4,3,2,3,3,3,1,4,3,3,3,4,3,3,1,4,3,4,4),
-B5 = c(1,2,2,1,2,1,2,1,3,1,1,1,3,1,1,1,3,1,1,1),
-W5 = c(4,1,3,4,4,4,3,4,4,4,2,4,4,2,4,2,1,4,3,4),
-B6 = c(2,4,2,1,2,1,4,3,1,1,1,1,3,2,1,2,3,4,1,4),
-W6 = c(4,1,4,4,4,3,3,4,4,2,4,2,4,4,3,4,4,1,4,1),
-B7 = c(3,3,2,3,4,1,2,3,3,3,2,1,3,2,1,2,3,1,3,2),
-W7 = c(1,4,1,4,1,4,4,4,4,2,4,4,4,4,4,4,4,4,4,4),
-B8 = c(1,1,2,1,2,2,1,1,1,2,1,2,1,1,1,3,1,1,1,1),
-W8 = c(3,3,3,3,3,3,3,3,4,3,3,3,4,3,3,4,4,3,4,3),
-B9 = c(3,3,3,1,3,1,1,3,1,1,1,1,3,1,1,1,3,1,1,1),
-W9 = c(2,1,2,2,2,2,4,2,4,2,4,2,2,2,2,4,1,2,2,2))
-
+  id = c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20),
+  B1 = c(2,2,2,1,2,4,2,2,2,2,1,2,2,4,2,3,2,3,2,2),
+  W1 = c(1,1,1,4,1,3,3,1,4,1,4,4,1,1,1,4,1,1,4,4),
+  B2 = c(1,1,2,1,1,3,1,1,1,1,2,1,1,2,1,3,1,3,1,1),
+  W2 = c(2,4,4,4,4,2,4,2,4,2,4,4,4,4,2,4,4,1,4,4),
+  B3 = c(1,1,2,1,2,1,1,1,1,2,1,1,1,2,1,1,1,1,3,1),
+  W3 = c(4,4,4,2,4,4,4,3,4,3,4,4,3,1,4,4,3,4,4,4),
+  B4 = c(1,2,2,1,2,1,2,2,2,1,2,4,2,2,2,4,2,2,1,2),
+  W4 = c(3,4,3,2,3,3,3,1,4,3,3,3,4,3,3,1,4,3,4,4),
+  B5 = c(1,2,2,1,2,1,2,1,3,1,1,1,3,1,1,1,3,1,1,1),
+  W5 = c(4,1,3,4,4,4,3,4,4,4,2,4,4,2,4,2,1,4,3,4),
+  B6 = c(2,4,2,1,2,1,4,3,1,1,1,1,3,2,1,2,3,4,1,4),
+  W6 = c(4,1,4,4,4,3,3,4,4,2,4,2,4,4,3,4,4,1,4,1),
+  B7 = c(3,3,2,3,4,1,2,3,3,3,2,1,3,2,1,2,3,1,3,2),
+  W7 = c(1,4,1,4,1,4,4,4,4,2,4,4,4,4,4,4,4,4,4,4),
+  B8 = c(1,1,2,1,2,2,1,1,1,2,1,2,1,1,1,3,1,1,1,1),
+  W8 = c(3,3,3,3,3,3,3,3,4,3,3,3,4,3,3,4,4,3,4,3),
+  B9 = c(3,3,3,1,3,1,1,3,1,1,1,1,3,1,1,1,3,1,1,1),
+  W9 = c(2,1,2,2,2,2,4,2,4,2,4,2,2,2,2,4,1,2,2,2))
 
 # Create a dataset and conduct a conditional logit model analysis
 ## Set response variables
@@ -325,8 +328,8 @@ pr.data <- bws2.dataset(
   response = response.vars,  
   choice.sets = omed,        
   attribute.levels = attr.lev,
-  attribute.variables = c("reverse"),
-  effect = base.lev,
+  reverse = TRUE,
+  base.level = base.lev,
   type = "paired")
 attributes(pr.data)$design.matrix
 head(pr.data, 12)
@@ -348,9 +351,8 @@ mr.data <- bws2.dataset(
   response = response.vars,
   choice.sets = omed,
   attribute.levels = attr.lev,
-  attribute.variables = c("reverse"),
-  effect = base.lev,
-  delete.best = FALSE,
+  reverse = TRUE,
+  base.level = base.lev,
   type = "marginal")
 attributes(mr.data)$design.matrix
 head(mr.data, 8)

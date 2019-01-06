@@ -5,17 +5,28 @@ function(
   response, 
   choice.sets, 
   attribute.levels, 
-  attribute.variables, 
-  effect)
+  reverse,
+  base.level)
 {
 
 
 # set variables
 
+### added ver 0.2-0 below -----------------------------------------------------
+## effect
+  effect <- base.level
+## attribuet.variables
+  if (isTRUE(reverse)) {
+    attribute.variables <- "reverse"
+  } else {
+    attribute.variables <- "constant"
+  }
+### added ver 0.2-0 above -----------------------------------------------------
+
 ## respondent dataset
   if (!is.null(data)) {
-    respondent.dataset <- data
-    colnames(respondent.dataset)[which(colnames(respondent.dataset) == id)] <- "ID"
+    resp.data <- data
+    colnames(resp.data)[which(colnames(resp.data) == id)] <- "ID"
   }
 
 ## attributes and their levels
@@ -30,7 +41,7 @@ function(
 ## number of questions (scenarios)
   num.ques <- nrow(choice.sets) 
 
-## attribute.variables
+## attribute variables
   attr.var <- names(attr.lev) 
 
 ## level variables
@@ -108,7 +119,7 @@ function(
   temp <- model.matrix(~ factor(des.mat[, 5], levels = attr.var) - 1) -
           model.matrix(~ factor(des.mat[, 6], levels = attr.var) - 1)
 ### attribute variables: attribute-specific constants (= 1)
-  if (attribute.variables == "constant") {
+  if (reverse == FALSE) {
     temp <- abs(temp)
   }
 
@@ -154,11 +165,11 @@ function(
 # create respondent dataset
 
 ## extract the names of respondents' characteristic variables
-respondent.characteristics <- 
-  colnames(respondent.dataset)[!(colnames(respondent.dataset) %in% c("ID", response))] 
+  respondent.characteristics <- 
+    colnames(resp.data)[!(colnames(resp.data) %in% c("ID", response))] 
 
 ## reshape the dataset into long format
-  resp.data.long <- reshape(respondent.dataset, 
+  resp.data.long <- reshape(resp.data, 
                             idvar = "ID", 
                             varying = response, 
                             sep = "", 
@@ -169,7 +180,7 @@ respondent.characteristics <-
 
 ## expand respondent dataset according to possible pairs in each BWS question
   temp <- data.frame(
-    ID   = rep(respondent.dataset$ID,
+    ID   = rep(resp.data$ID,
                each = num.attr * (num.attr - 1) * num.ques),
     Q    = rep(1:num.ques, each = num.attr * (num.attr - 1)),
     PAIR = rep(1:(num.attr * (num.attr - 1)), times =num.ques))
@@ -193,7 +204,7 @@ respondent.characteristics <-
 
 # change order of variables
 
-  covariate.names <- colnames(respondent.dataset)
+  covariate.names <- colnames(resp.data)
   covariate.names <- 
     covariate.names[!covariate.names %in% c("ID", response)]
   dataset <- dataset[, c("ID", "Q", "PAIR", "BEST", "WORST", "BEST.AT",
@@ -225,6 +236,8 @@ respondent.characteristics <-
   attributes(dataset)$response            <- response
   attributes(dataset)$choice.sets         <- choice.sets
   attributes(dataset)$attribute.levels    <- attribute.levels
+  attributes(dataset)$reverse             <- reverse
+  attributes(dataset)$base.level          <- base.level
   attributes(dataset)$attribute.variables <- attribute.variables
   attributes(dataset)$effect              <- effect
   attributes(dataset)$type                <- c("paired")

@@ -8,8 +8,8 @@ function(
 
   B <- colSums(x[, attributes(x)$b.names])
   W <- colSums(x[, attributes(x)$w.names])
-  names.B <- sub("b.", "", names(B))
-  names.W <- sub("w.", "", names(W))
+  names.B <- substring(text = names(B), first = 3)
+  names.W <- substring(text = names(W), first = 3)
   if (!isTRUE(all.equal(names.B, names.W))) {
     stop("Names of B scores are different from those of W scores")
   }
@@ -22,9 +22,8 @@ function(
     attributeW  <- W
     attributeBW <- BW
 
-    names(attributeB)  <- sub("b.",  "", names(attributeB))
-    names(attributeW)  <- sub("w.",  "", names(attributeB))
-    names(attributeBW) <- sub("bw.", "", names(attributeB))
+    names(attributeB) <- names(attributeW) <- names(attributeBW) <-
+      substring(text = names(attributeB), first = 3)
 
     attr.lev <- attributes(x)$attribute.levels
 

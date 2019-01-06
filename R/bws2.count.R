@@ -8,32 +8,7 @@ function (
   freq.lev      <- attributes(data)$freq.levels
   id.variable   <- attributes(data)$id
 
-if (attributes(data)$type == "marginal")  {
-
-# delete lev.var.wo.ref variables from data
-  dataset <- data[, !colnames(data) %in% attributes(data)$lev.var.wo.ref]
-
-# add level variables to dataset
-  level.variables.mat <- matrix(dataset$LEV.cha,
-                                nrow = length(dataset$LEV.cha),
-                                ncol = length(variableNames))
-  level.variable.names.mat <- matrix(variableNames,
-                                     nrow = nrow(level.variables.mat),
-                                     ncol = ncol(level.variables.mat),
-                                     byrow = TRUE)
-  level.variables.mat <- level.variables.mat == level.variable.names.mat
-  storage.mode(level.variables.mat) <- "integer"
-  colnames(level.variables.mat) <- variableNames
-  dataset <- cbind(dataset, level.variables.mat)
-
-  B <- subset(dataset, 
-              dataset$BW ==  1 & dataset$RES == 1,
-              select = c(id.variable, "Q", "BW", variableNames))
-  W <- subset(dataset,
-              dataset$BW == -1 & dataset$RES == 1,
-              select = c(id.variable, "Q", "BW", variableNames))
-
-} else {
+if (attributes(data)$type == "paired")  {
 
   dataset <- subset(data, data$RES == 1)
   dataset.bw <- subset(dataset, 
@@ -61,6 +36,29 @@ if (attributes(data)$type == "marginal")  {
   BW <- rep(-1, nrow(dsgn.mat))
   W <- cbind(dataset.bw[, c(id.variable, "Q", "WORST.LV")], BW, dsgn.mat)
 
+} else {
+
+# delete lev.var.wo.ref variables from data
+  dataset <- data[, !colnames(data) %in% attributes(data)$lev.var.wo.ref]
+
+# add level variables to dataset
+  level.variables.mat <- matrix(dataset$LEV.cha,
+                                nrow = length(dataset$LEV.cha),
+                                ncol = length(variableNames))
+  level.variable.names.mat <- matrix(variableNames,
+                                     nrow = nrow(level.variables.mat),
+                                     ncol = ncol(level.variables.mat),
+                                     byrow = TRUE)
+  level.variables.mat <- level.variables.mat == level.variable.names.mat
+  storage.mode(level.variables.mat) <- "integer"
+  colnames(level.variables.mat) <- variableNames
+  dataset <- cbind(dataset, level.variables.mat)
+  B <- subset(dataset, 
+              dataset$BW ==  1 & dataset$RES == 1,
+              select = c(id.variable, "Q", "BW", variableNames))
+  W <- subset(dataset,
+              dataset$BW == -1 & dataset$RES == 1,
+              select = c(id.variable, "Q", "BW", variableNames))
 }
 
   disaggreB <- do.call(rbind,
@@ -97,13 +95,13 @@ if (attributes(data)$type == "marginal")  {
 
   if (!isTRUE(all.equal(length(attributes(data)$respondent.characteristics), 0))) {
     resp.cha.vars <- attributes(data)$respondent.characteristics
-    if (attributes(data)$type == "marginal")  {
+    if (attributes(data)$type == "paired")  {
       dataset.tmp <- subset(data,
-                            data$Q == 1 & data$ALT == 1 & data$BW == 1,
+                            data$Q == 1 & data$PAIR == 1,
                             select = c(id.variable, resp.cha.vars))
     } else {
       dataset.tmp <- subset(data,
-                            data$Q == 1 & data$PAIR == 1,
+                            data$Q == 1 & data$ALT == 1 & data$BW == 1,
                             select = c(id.variable, resp.cha.vars))
     }
       rtn <- merge(x = rtn, y = dataset.tmp, by = id.variable)

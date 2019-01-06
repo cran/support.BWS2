@@ -1,14 +1,25 @@
 Changes to package support.BWS2
 
+
+2019-01-06, version 0.2-1
+- Modified examples in agritourism.
+
+
+2019-01-04, version 0.2-0
+- Modified functions bws2.dataset, bws2.dataset.marginal, bws2.dataset.paired, and bws2.count.
+
+- Fixed a function sum.bws2.conunt.
+
+
 2018-06-29, version 0.1-2
--Modified functions bws2.count and bws2.dataset.paired
+- Modified functions bws2.count and bws2.dataset.paired.
 
 
 2017-03-25, version 0.1-1
--Fixed an internal function
+- Fixed an internal function.
 
--Added a dataset
+- Added a dataset.
 
 
 2017-01-18, version 0.1-0
--First release to CRAN
+- First release to CRAN.

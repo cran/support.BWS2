@@ -5,18 +5,36 @@ function(
   response,
   choice.sets,
   attribute.levels,
-  attribute.variables,
-  effect = NULL,
-  delete.best)
+  type,
+  base.attribute,
+  base.level,
+  reverse)
 {
 
 
 # set variables
 
+### added v 0.2-0 below ------------------------------------------------------
+## delete.best
+  if (type == "sequential") {
+    delete.best <- TRUE
+  } else {
+    delete.best <- FALSE
+  }
+## effect ver
+  effect <- base.level
+## attribute.variables
+  if (isTRUE(reverse)) {
+    attribute.variables <- "reverse"
+  } else {
+    attribute.variables <- "constant"
+  }
+### added v 0.2-0 above ------------------------------------------------------
+
 ## respondent dataset
   if (!is.null(data)) {
-    respondent.dataset <- data
-    colnames(respondent.dataset)[which(colnames(respondent.dataset) == id)] <- "ID"
+    resp.data <- data  ## modified ver 0.2-0
+    colnames(resp.data)[which(colnames(resp.data) == id)] <- "ID"
   }
 
 ## attributes and their levels
@@ -94,8 +112,19 @@ function(
   des.mat[, 6] <- as.vector(t(cbind(choice.sets.cha, choice.sets.cha)))
   des.mat[, 7] <- as.vector(t(cbind(choice.sets, choice.sets)))
 
-## create attribute variables: 1 = treated as best, -1 = treated as worst
-  temp <- model.matrix(~ factor(des.mat[, 4], levels = attr.var) - 1)
+## create attribute variables
+
+### added v 0.2-0 below ------------------------------------------------------
+  ATTR <- factor(des.mat[, 4], levels = attr.var)
+  temp <- model.matrix(~ ATTR - 1)
+  colnames(temp) <- substring(text = colnames(temp), first = 5)
+  ### effect coding
+  if (!is.null(base.attribute)) {
+    rows2ref <- temp[, base.attribute] == 1
+    temp[rows2ref, ] <- -1
+  }
+### added v 0.2-0 above ------------------------------------------------------
+
   if (isTRUE(attribute.variables == "reverse")) {
     temp <- temp * des.mat[, "BW"] 
   }
@@ -113,7 +142,8 @@ function(
     for (i in 1:nrow(des.mat)) {
       y <- attr.lev[[des.mat[i, "ATT.cha"]]][-num.lev[des.mat[i, "ATT.cha"]]]
       des.mat[i, y] <- 
-        as.integer(best.lev[[des.mat[i, "ATT.cha"]]][des.mat[i, "LEV.cha"], ] * des.mat[i, "BW"]) 
+        as.integer(best.lev[[des.mat[i, "ATT.cha"]]][des.mat[i, "LEV.cha"], ] *
+                   des.mat[i, "BW"]) 
       # des.mat[i, "BW"] is used to multiply level variables by -1
     }
   } else {
@@ -129,6 +159,13 @@ function(
   freq.levels <- as.vector(temp)
   names(freq.levels) <- names(temp)
   freq.levels <- freq.levels[lev.var]
+
+### added ver 0.2-0 below -----------------------------------------------------
+  if (!is.null(base.attribute)) {
+    delete.column.ref <- colnames(des.mat) != base.attribute
+    des.mat <- des.mat[, delete.column.ref]
+  }
+### added ver 0.2-0 above -----------------------------------------------------
 
 ## store design matrix
   design.matrix <- des.mat
@@ -146,10 +183,10 @@ function(
 
 ## extract the names of respondents' characteristic variables
 respondent.characteristics <- 
-  colnames(respondent.dataset)[!(colnames(respondent.dataset) %in% c("ID", response))] 
+  colnames(resp.data)[!(colnames(resp.data) %in% c("ID", response))] 
 
 ## reshape the dataset into long format
-  resp.data.long <- reshape(respondent.dataset, 
+  resp.data.long <- reshape(resp.data, 
                             idvar = "ID", 
                             varying = response, 
                             sep = "", 
@@ -160,7 +197,7 @@ respondent.characteristics <-
 
 ## expand respondent dataset according to possible pairs in each BWS question
   temp <- data.frame(
-    ID  = rep(respondent.dataset$ID, each = 2 * num.attr * num.ques),
+    ID  = rep(resp.data$ID, each = 2 * num.attr * num.ques),
     Q   = rep(1:num.ques, each = 2 * num.attr),
     ALT = rep(1:num.attr, times = 2 * num.ques),
     BW  = rep(c(rep(1, times = num.attr), rep(-1, times = num.attr)),
@@ -191,13 +228,19 @@ respondent.characteristics <-
 
 # change order of variables
 
-  covariate.names <- colnames(respondent.dataset)
+### added ver 0.2-0 below -----------------------------------------------------
+  if (!is.null(base.attribute)) {
+    attr.var <- attr.var[attr.var != base.attribute]
+  }
+### added ver 0.2-0 above -----------------------------------------------------
+
+  covariate.names <- colnames(resp.data)
   covariate.names <- 
     covariate.names[!covariate.names %in% c("ID", response)]
   dataset <- dataset[, c("ID", "Q", "ALT", "BW",  
-                   "ATT.cha" ,"ATT", "LEV.cha", "LEV", 
-                   attr.var, lev.var.wo.ref,
-                   "RES.B", "RES.W", "RES", "STR", covariate.names)]
+                         "ATT.cha" ,"ATT", "LEV.cha", "LEV", 
+                         attr.var, lev.var.wo.ref,
+                         "RES.B", "RES.W", "RES", "STR", covariate.names)]
 
 
 # change name of id variable
@@ -211,10 +254,13 @@ respondent.characteristics <-
   attributes(dataset)$response            <- response
   attributes(dataset)$choice.sets         <- choice.sets
   attributes(dataset)$attribute.levels    <- attribute.levels
+  attributes(dataset)$reverse             <- reverse
+  attributes(dataset)$base.attribute      <- base.attribute
+  attributes(dataset)$base.level          <- base.level
   attributes(dataset)$attribute.variables <- attribute.variables
   attributes(dataset)$effect              <- effect
   attributes(dataset)$delete.best         <- delete.best
-  attributes(dataset)$type                <- c("marginal")
+  attributes(dataset)$type                <- type
   attributes(dataset)$design.matrix       <- design.matrix
   attributes(dataset)$lev.var.wo.ref      <- lev.var.wo.ref
   attributes(dataset)$freq.levels         <- freq.levels
