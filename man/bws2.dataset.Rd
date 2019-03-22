@@ -19,8 +19,9 @@ This function creates a dataset used for \code{bws2.count()} in
 \usage{
 bws2.dataset(data, id, response, choice.sets, attribute.levels, 
   base.attribute = NULL, base.level = NULL, 
-  type = c("paired", "marginal", "sequential"), reverse = TRUE,
+  reverse = TRUE, model = "paired",
   attribute.variables = NULL, effect = NULL, delete.best = FALSE, 
+  type = c("paired", "marginal", "sequential"), 
    ...)
 }
 
@@ -56,15 +57,15 @@ when attribute level variables are created as effect coded ones and
 \code{NULL} is assigned to the argument when attribute level 
 variables are created as dummy coded ones.
 }
-  \item{type}{
-A character showing a type of dataset created by this function: 
-\code{"paired"} for a paired model, \code{"marginal"} for a 
-marginal model, and \code{"sequential"} for a marginal sequential model.
-}
   \item{reverse}{
 A logical value denoted by \code{TRUE} when the signs of the attribute 
 variables are reversed for the possible worst, 
 or otherwise \code{FALSE}.
+}
+  \item{model}{
+A character showing a type of dataset created by this function: 
+\code{"paired"} for a paired model, \code{"marginal"} for a 
+marginal model, and \code{"sequential"} for a marginal sequential model.
 }
   \item{attribute.variables}{
 A character showing a type of attribute variables, denoted by 
@@ -85,7 +86,13 @@ Please use the argument \code{base.level} instead.
 A logical value denoted by \code{TRUE} when deleting an attribute level 
 selected as the best in the worst choice set (that is, using a marginal 
 sequential model) or \code{FALSE} when not doing so. 
-The argument is deprecated. Please use the argument \code{type} instead.
+The argument is deprecated. Please use the argument \code{model} instead.
+}
+  \item{type}{
+A character showing a type of dataset created by this function: 
+\code{"paired"} for a paired model, \code{"marginal"} for a 
+marginal model, and \code{"sequential"} for a marginal sequential model. 
+The argument is deprecated. Please use the argument \code{model} instead.
 }
   \item{\dots}{
 Optional arguments; currently not in use.
@@ -156,7 +163,8 @@ in each attribute for a model with effect-coded level variables
  with dummy-coded attribute level variables (Hensher et al. 2015, Appendix 6B).
 
 Note that the arguments \code{attribute.variables}, \code{effect}, 
-and \code{delete.best} are deprecated and will be removed in the future.
+\code{delete.best}, and \code{type} are deprecated and will be removed 
+in the future.
 }
 
 
@@ -330,7 +338,7 @@ pr.data <- bws2.dataset(
   attribute.levels = attr.lev,
   reverse = TRUE,
   base.level = base.lev,
-  type = "paired")
+  model = "paired")
 attributes(pr.data)$design.matrix
 head(pr.data, 12)
 ### Attribute variable D is omitted from the model
@@ -353,7 +361,7 @@ mr.data <- bws2.dataset(
   attribute.levels = attr.lev,
   reverse = TRUE,
   base.level = base.lev,
-  type = "marginal")
+  model = "marginal")
 attributes(mr.data)$design.matrix
 head(mr.data, 8)
 ### Attribute variable D is omitted from the model

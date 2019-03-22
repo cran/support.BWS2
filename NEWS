@@ -1,6 +1,12 @@
 Changes to package support.BWS2
 
 
+2019-03-22, version 0.2-2
+- Modified function bws2.dataset.
+
+- Modified examples in agritourism and bws2.dataset.
+
+
 2019-01-06, version 0.2-1
 - Modified examples in agritourism.
 

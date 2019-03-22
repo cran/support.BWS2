@@ -147,7 +147,7 @@ pr.data1 <- bws2.dataset(
   attribute.levels = attr.lev,
   reverse = TRUE,
   base.level = base.lev,
-  type = "paired") 
+  model = "paired") 
 mr.data1 <- bws2.dataset(
   data = agritourism,
   id = "id",
@@ -156,7 +156,7 @@ mr.data1 <- bws2.dataset(
   attribute.levels = attr.lev,
   reverse = TRUE,
   base.level = base.lev,
-  type = "marginal")
+  model = "marginal")
 dim(pr.data1)
 names(pr.data1)
 dim(mr.data1)

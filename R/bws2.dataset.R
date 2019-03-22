@@ -7,17 +7,24 @@ function(
   attribute.levels,
   base.attribute = NULL,
   base.level = NULL,
-  type = c("paired", "marginal", "sequential"),
   reverse = TRUE,
+  model = "paired",
   attribute.variables = NULL,
   effect = NULL,
   delete.best = FALSE,
+  type = c("paired", "marginal", "sequential"),
   ...)
 {
 
 # check arguments
 
 ## deprecated arguments
+
+### type
+  if (length(type) == 1) {
+    model <- match.arg(type)
+    warning("argument type is deprecated. Please use model instead. Argument model was set as '", model, "'")
+  }
 
 ### attribute.variables
   if (!is.null(attribute.variables)) {
@@ -38,14 +45,14 @@ function(
 
 ### delete.best
   if (isTRUE(delete.best)) {
-    warning("argument delete.best is deprecated. Please use type instead. Argument type was set as 'sequential'")
-    type <- "sequential"
+    warning("argument delete.best is deprecated. Please use model instead. Argument model was set as 'sequential'")
+    model <- "sequential"
   }
 
 ## invalid combinations of arguments
 
-### type and base.attribute
-  if(type == "paired" && !is.null(base.attribute)) {
+### type (model) and base.attribute
+  if(model == "paired" && !is.null(base.attribute)) {
     stop("effect-coded attribute variables are unavailable for paired model")
   }
 
@@ -58,7 +65,7 @@ function(
 # call internal function
 
 ## paired model
-  if (type == "paired") {
+  if (model == "paired") {
     bws2.dataset.paired(
       data                = data,
       id                  = id,
@@ -76,7 +83,7 @@ function(
       response            = response,
       choice.sets         = choice.sets,
       attribute.levels    = attribute.levels,
-      type                = type,
+      type                = model,
       base.attribute      = base.attribute,
       base.level          = base.level,
       reverse             = reverse)
