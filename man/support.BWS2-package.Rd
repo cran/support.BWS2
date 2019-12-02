@@ -5,7 +5,7 @@
 \docType{package}
 
 \title{
-Basic functions for supporting an implementation of Case 2 best--worst scaling
+Tools for Case 2 best-worst scaling
 }
 
 \description{
@@ -13,7 +13,7 @@ The package has three basic functions that support an implementation of
 Case 2 (profile case) best--worst scaling. The first is to convert 
 an orthogonal main-effect design into questions, the second is to create 
 a dataset suitable for analysis, and the third is to calculate 
-count-based scores.
+count-based scores. For details, see Aizaki and Fogarty (2019).
 }
 
 \details{
@@ -194,10 +194,10 @@ from the OMED and the responses to the questions, and calculate BWS scores.
 Other packages are needed to complete implementing Case 2 BWS with R: 
 a package to construct OMEDs and another to analyze the responses 
 on the basis of the modeling approach. For example, 
-the \code{oa.design()} function in \pkg{DoE.base} (Groemping 2015) can 
+the \code{oa.design()} function in \pkg{DoE.base} (Groemping 2018) can 
 construct OMEDs, while the functions \code{clogit()} in \pkg{survival} 
 (Therneau 2016), \code{mlogit()} in \pkg{mlogit} (Croissant 2013), 
-and \code{gmnl()} in \pkg{gmnl} (Sarrias and Daziano 2015) can fit 
+and \code{gmnl()} in \pkg{gmnl} (Sarrias and Daziano 2017) can fit 
 the conditional logit model. The latter two functions are also used 
 to fit advanced discrete choice models 
 such as a mixed (random parameters) logit model. Refer to the task views
@@ -217,27 +217,33 @@ Hideo Aizaki
 }
 
 \references{
+Aizaki H, Fogarty J (2019) An R package and tutorial for case 2 best-worst scaling. \emph{Journal of Choice Modelling}, \bold{32}, 100171. 
+\url{https://doi.org/10.1016/j.jocm.2019.100171}.
+
 Flynn TN (2010) Valuing citizen and patient preferences in health: 
 recent developments in three types of best-worst scaling. 
 \emph{Expert Review of Pharmacoeconomics & Outcomes Research}, 
 \bold{10}(3), 259--267.
+\url{https://doi.org/10.1586/erp.10.29}.
 
 Flynn TN, Louviere JJ, Peters TJ, Coast J (2007) Best-Worst Scaling: 
 What it can do for health care research and how to do it. 
 \emph{Journal of Health Economics}, \bold{26}, 171--189.
+\url{https://doi.org/10.1016/j.jhealeco.2006.04.002}.
 
 Flynn TN, Louviere JJ, Peters TJ, Coast J (2008) Estimating 
 preferences for a dermatology consultation using best-worst scaling: 
 Comparison of various methods of analysis. 
 \emph{BMC Medical Research Methodology}, \bold{8}(76). 
-doi: 10.1186/1471-2288-8-76.
+\url{https://doi.org/10.1186/1471-2288-8-76}.
 
 Croissant Y (2013) \emph{mlogit: multinomial logit model}. 
-R package version 0.2-4. \url{https://CRAN.R-project.org/package=mlogit}.
+R package version 0.2-4. 
+\url{https://CRAN.R-project.org/package=mlogit}.
 
-Groemping U (2015) \emph{DoE.base: Full Factorials, Orthogonal Arrays and 
-Base Utilities for DoE Packages}. R package version 0.27-1. 
-\url{https://CRAN.R-project.org/package=DoE.base}.
+Groemping U (2018) R Package DoE.base for Factorial Experiments.
+\emph{Journal of Statistical Software}, \bold{85}(5), 1--41.
+\url{https://doi.org/10.18637/jss.v085.i05}.
 
 Groemping U (2016) \emph{CRAN Task View: Design of Experiments (DoE) &
  Analysis of Experimental Data}. 
@@ -245,20 +251,24 @@ Groemping U (2016) \emph{CRAN Task View: Design of Experiments (DoE) &
 
 Hensher DA, Rose JM, Greene WH (2015) \emph{Applied Choice Analysis}. 
 2nd edition. Cambridge University Press.
+\url{https://doi.org/10.1017/CBO9781316136232}.
 
 Louviere JJ, Flynn TN, Marley AAJ (2015) \emph{Best-Worst Scaling: 
 Theory, Methods and Applications}. Cambridge University Press.
+\url{https://doi.org/10.1017/CBO9781107337855}.
 
 Marley AAJ, Flynn TN, Louviere JJ (2008) Probabilistic models of 
 set-dependent and attribute-level best-worst choice. 
 \emph{Journal of Mathematical Psychology}, \bold{52}, 281--296.
+\url{https://doi.org/10.1016/j.jmp.2008.02.002}.
 
-Sarrias M, and Daziano R (2015) \emph{gmnl: Multinomial Logit Models 
-with Random Parameters}. R package version 1.1-1. 
-\url{https://CRAN.R-project.org/package=gmnl}.
+Sarrias M, Daziano R (2017) Multinomial Logit Models with Continuous and Discrete Individual Heterogeneity in R: The gmnl Package.
+\emph{Journal of Statistical Software}, \bold{79}(2), 1--46. 
+\url{https://doi.org/10.18637/jss.v079.i02}.
 
 Therneau T (2015) \emph{A Package for Survival Analysis in S}. 
-Version 2.38, \url{https://CRAN.R-project.org/package=survival}.
+Version 2.38, 
+\url{https://CRAN.R-project.org/package=survival}.
 
 Zeileis A (2017) \emph{CRAN Task View: Econometrics}. 
 \url{https://CRAN.R-project.org/view=Econometrics}.
