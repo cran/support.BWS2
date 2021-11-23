@@ -11,6 +11,8 @@ function(
 
 
 # set variables
+  choice.sets.original <- choice.sets
+  choice.sets <- as.matrix(choice.sets)
 
 ### added ver 0.2-0 below -----------------------------------------------------
 ## effect
@@ -234,7 +236,7 @@ function(
 
   attributes(dataset)$id                  <- id
   attributes(dataset)$response            <- response
-  attributes(dataset)$choice.sets         <- choice.sets
+  attributes(dataset)$choice.sets         <- choice.sets.original
   attributes(dataset)$attribute.levels    <- attribute.levels
   attributes(dataset)$reverse             <- reverse
   attributes(dataset)$base.level          <- base.level

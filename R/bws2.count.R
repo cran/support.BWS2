@@ -78,7 +78,7 @@ if (attributes(data)$type == "paired")  {
   diffBW <- disaggreB - disaggreW
   diffBW[, id.variable] <- disaggreB[, id.variable]
   IDvar <- disaggreB[, id.variable]
-  std.diffBW <- diffBW/freq.lev
+  std.diffBW <- sweep(x = diffBW, MARGIN = 2, STATS = c(1, freq.lev), FUN = "/")
   std.diffBW[, id.variable] <- disaggreB[, id.variable]
 
   b.names  <- paste("b",  names(disaggreB)[-1], sep = ".")

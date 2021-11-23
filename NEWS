@@ -1,5 +1,9 @@
 Changes to package support.BWS2
 
+2021-11-23, version 0.3-1
+- Fixed functions bws2.dataset and bws2.count.
+- Revised help file.
+
 2019-12-02, version 0.3-0
 - Shortened the title.
 - Added function bws2.response.
