@@ -249,6 +249,10 @@ function(
   attributes(dataset)$respondent.characteristics <- respondent.characteristics
 
 
+# set S3 class bws2dataset
+
+  class(dataset) <- c("bws2dataset", "data.frame")
+
 
 # return dataset
 

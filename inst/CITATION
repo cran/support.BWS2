@@ -4,14 +4,14 @@ citEntry(
   entry  = "Manual",
   title  = "{support.BWS2: Tools for Case 2 Best-Worst Scaling}",
   author = "Hideo Aizaki",
-  year   = 2021,
-  note   = "R package version 0.3-1",
+  year   = 2022,
+  note   = "R package version 0.4-0",
   url    = "https://CRAN.R-project.org/package=support.BWS2",
 
   textVersion = 
-  paste("Aizaki H (2021).",
+  paste("Aizaki H (2022).",
         "support.BWS2: Tools for Case 2 Best-Worst Scaling.",
-        "R package version 0.3-1.",
+        "R package version 0.4-0.",
         "URL https://CRAN.R-project.org/package=support.BWS2.")
 )
 
